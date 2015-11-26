@@ -1,0 +1,3 @@
+[submodule "scramblers"]
+	path = scramblers
+	url = https://github.com/cubing/jsss

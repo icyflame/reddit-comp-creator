@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" href="./site-icon.png">
     <title>Cubing competition markup creator &middot; /r/Cubers</title>
+    <link rel="stylesheet" type="text/css" href="sweetalert/sweetalert.css">
   </head>
   <body>
     <div class="main-form-container">
@@ -13,6 +14,9 @@
         <br>
         <label for="compdeadline">Competition deadline:</label>
         <input type="text" name="compdeadline" value="">
+        <br>
+        <label for="compoll">OLL number for this competition:</label>
+        <input type="number" name="compoll" value="">
         <br>
         <input type="submit" value="Submit">
         <input type="button" class="hide-form" value="Hide this section">
@@ -106,6 +110,7 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 
 > 1. <span class="scramble_to_fill" data-cube-size="222"></span>
 
+
 **3x3:**
 
 > 1. <span class="scramble_to_fill" data-cube-size="333"></span>
@@ -197,11 +202,12 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 > 1.
 
 
-**OLL:** This week, we're doing [OLL todo_oll_num] (http://algdb.net/Set/OLL/OLL%20todo_oll_num)!
+**OLL:** This week, we're doing [OLL <span class="compoll">todo_oll_num</span>] (http://algdb.net/Set/OLL/OLL%20<span class="compoll">todo_oll_number</span>)!
 
 </pre>
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="sweetalert/sweetalert.min.js"></script>
     <script src="scramblers/scramble_222.js" charset="utf-8"></script>
     <script src="scramblers/scramble_333.js" charset="utf-8"></script>
     <script src="scramblers/scramble_NNN.js" charset="utf-8"></script>
@@ -216,20 +222,37 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 
         var ref_comp = 158;
         var ref_comp_deadline = 'Mon, 23 Nov 2015 02:00:00 GMT';
+        var ref_oll_number = 22;
 
         var ref_date = new Date(ref_comp_deadline);
         var milliseconds_per_week = 1000 * 3600 * 24 * 7;
-        var num_weeks_float = (new Date('2015-12-09') - ref_date) / milliseconds_per_week;
+        var num_weeks_float = (new Date() - ref_date) / milliseconds_per_week;
+
         var this_comp_num = Math.ceil(num_weeks_float) + ref_comp;
+        var this_oll_num = Math.ceil(num_weeks_float) + ref_oll_number;
         var this_comp_deadline = ref_date.getTime() + milliseconds_per_week * Math.ceil(num_weeks_float);
         var this_comp_deadline_date = new Date(this_comp_deadline);
+
         console.log('Competition number calculated to be: ' + this_comp_num);
         console.log('Competition deadline calculated to be: ' + this_comp_deadline_date);
+        console.log('OLL number for this competition: ' + this_oll_num);
 
-        $('.main-form input[name=compnum]').val(this_comp_num);
-        $('.main-form input[name=compdeadline]').val(this_comp_deadline_date.toUTCString());
-        $('span.compnum').html(this_comp_num);
-        $('span.compdeadline').html(this_comp_deadline_date.toUTCString());
+        var main_dict = {
+          'compnum': this_comp_num,
+          'compoll': this_oll_num,
+          'compdeadline': this_comp_deadline_date.toUTCString()
+        };
+
+        for (var key in main_dict) {
+          var value = main_dict[key];
+          $('.main-form input[name=' + key + ']').each(function () {
+            $(this).val(value);
+          });
+
+          $('span.' + key).each(function () {
+            $(this).html(value);
+          });
+        }
 
         // fill scrambles
 

@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="./site-icon.png">
     <title>Cubing competition markup creator &middot; /r/Cubers</title>
     <link rel="stylesheet" type="text/css" href="sweetalert/sweetalert.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
   </head>
   <body>
     <div class="main-form-container">
@@ -20,6 +21,8 @@
         <br>
         <input type="submit" value="Submit">
         <input type="button" class="hide-form" value="Hide this section">
+        <input type="button" class="edit-comp-button" data-increment="1" value="Next competition">
+        <input type="button" class="edit-comp-button" data-increment="-1" value="Previous competition">
       </form>
       <hr/>
     </div>
@@ -207,6 +210,7 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 </pre>
 
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="sweetalert/sweetalert.min.js"></script>
     <script src="scramblers/scramble_222.js" charset="utf-8"></script>
     <script src="scramblers/scramble_333.js" charset="utf-8"></script>
@@ -214,29 +218,11 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
     <script src="scramblers/scramble_sq1.js" charset="utf-8"></script>
 
     <script>
-      $(document).ready(function () {
-        // Reference competition number and deadline
-        // calculate the appropriate comp number and the comp deadline
+      var this_comp_num, this_oll_num, this_comp_deadline, this_comp_deadline_date;
+      var update_markup, change_comp_linear;
 
-        // Comp 158 ended on the given date
-
-        var ref_comp = 158;
-        var ref_comp_deadline = 'Mon, 23 Nov 2015 02:00:00 GMT';
-        var ref_oll_number = 22;
-
-        var ref_date = new Date(ref_comp_deadline);
-        var milliseconds_per_week = 1000 * 3600 * 24 * 7;
-        var num_weeks_float = (new Date() - ref_date) / milliseconds_per_week;
-
-        var this_comp_num = Math.ceil(num_weeks_float) + ref_comp;
-        var this_oll_num = Math.ceil(num_weeks_float) + ref_oll_number;
-        var this_comp_deadline = ref_date.getTime() + milliseconds_per_week * Math.ceil(num_weeks_float);
-        var this_comp_deadline_date = new Date(this_comp_deadline);
-
-        console.log('Competition number calculated to be: ' + this_comp_num);
-        console.log('Competition deadline calculated to be: ' + this_comp_deadline_date);
-        console.log('OLL number for this competition: ' + this_oll_num);
-
+      // global function to update markup as per the global variables
+      update_markup = function () {
         var main_dict = {
           'compnum': this_comp_num,
           'compoll': this_oll_num,
@@ -253,6 +239,46 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
             $(this).html(value);
           });
         }
+      };
+
+      // global function to increment or decrement the competition number
+      // and other variables.
+      change_comp_linear = function (offset) {
+        this_oll_num += offset;
+        this_comp_num += offset;
+        this_comp_deadline_date = new Date(this_comp_deadline_date.getTime() +
+                                      offset * milliseconds_per_week);
+        update_markup();
+      }
+
+      // REFERENCES
+      // Reference competition number, deadline and OLL number
+      // Comp 158 ended on this date
+
+      var ref_comp = 158;
+      var ref_comp_deadline = 'Mon, 23 Nov 2015 02:00:00 GMT';
+      var ref_oll_number = 22;
+      var ref_date = new Date(ref_comp_deadline);
+
+      // CONSTANTS
+      var milliseconds_per_week = 1000 * 3600 * 24 * 7;
+
+      $(document).ready(function () {
+        // calculate the appropriate comp number and the comp deadline
+
+        var num_weeks_float = (new Date() - ref_date) / milliseconds_per_week;
+
+        this_comp_num = Math.ceil(num_weeks_float) + ref_comp;
+        this_oll_num = Math.ceil(num_weeks_float) + ref_oll_number;
+        this_comp_deadline = ref_date.getTime() + milliseconds_per_week * Math.ceil(num_weeks_float);
+        this_comp_deadline_date = new Date(this_comp_deadline);
+
+        console.log('Competition number calculated to be: ' + this_comp_num);
+        console.log('Competition deadline calculated to be: ' + this_comp_deadline_date);
+        console.log('OLL number for this competition: ' + this_oll_num);
+
+        update_markup();
+        toastr["success"]("Done! Markup has been updated with calculated values!");
 
         // fill scrambles
 
@@ -271,13 +297,20 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
             }
           });
           e.preventDefault();
-          swal('Done!', 'Markup has been updated! Hide the form and post it on Reddit!', 'success')
+          toastr["success"]("Done! Markup has been updated!");
         });
 
         // hide the form when the hide form button is pressed
 
         $('input.hide-form').on('click', function () {
           $('.main-form-container').hide();
+        });
+
+        // handle the next comp and previous competition buttons
+
+        $('input.edit-comp-button').on('click', function () {
+          change_comp_linear(parseInt($(this).attr('data-increment'), 10));
+          toastr["success"]("Done! Markup has been updated with required increment!");
         });
       });
     </script>

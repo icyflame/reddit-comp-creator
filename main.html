@@ -6,7 +6,20 @@
     <title>Cubing competition markup creator &middot; /r/Cubers</title>
   </head>
   <body>
-<pre>Hello, and welcome to the /r/cubers weekly competitions! If you're new, please read the entire post before competing!  This is competition todo_comp_num, and will go until todo_deadline.
+    <div class="main-form-container">
+      <form class="main-form" action="" method="post">
+        <label for="compnum">Competition number:</label>
+        <input type="number" name="compnum" value="">
+        <br>
+        <label for="compdeadline">Competition deadline:</label>
+        <input type="text" name="compdeadline" value="">
+        <br>
+        <input type="submit" value="Submit">
+        <input type="button" class="hide-form" value="Hide this section">
+      </form>
+      <hr/>
+    </div>
+<pre>Hello, and welcome to the /r/cubers weekly competitions! If you're new, please read the entire post before competing!  This is competition <span class="compnum">todo_comp_num</span>, and will go until <span class="compdeadline">todo_deadline</span>.
 
 There’s a rotation of 4 events to be held once a month: 5x5, BLD, Skewb, and Pyraminx. You can also request an event to be done! If you want an event in an upcoming competition, write it with your results. One event will be done per week. You must be able to do the event you're requesting.
 
@@ -196,10 +209,52 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 
     <script>
       $(document).ready(function () {
-        var i = 0;
+        // Reference competition number and deadline
+        // calculate the appropriate comp number and the comp deadline
+
+        // Comp 158 ended on the given date
+
+        var ref_comp = 158;
+        var ref_comp_deadline = 'Mon, 23 Nov 2015 02:00:00 GMT';
+
+        var ref_date = new Date(ref_comp_deadline);
+        var milliseconds_per_week = 1000 * 3600 * 24 * 7;
+        var num_weeks_float = (new Date('2015-12-09') - ref_date) / milliseconds_per_week;
+        var this_comp_num = Math.ceil(num_weeks_float) + ref_comp;
+        var this_comp_deadline = ref_date.getTime() + milliseconds_per_week * Math.ceil(num_weeks_float);
+        var this_comp_deadline_date = new Date(this_comp_deadline);
+        console.log('Competition number calculated to be: ' + this_comp_num);
+        console.log('Competition deadline calculated to be: ' + this_comp_deadline_date);
+
+        $('.main-form input[name=compnum]').val(this_comp_num);
+        $('.main-form input[name=compdeadline]').val(this_comp_deadline_date.toUTCString());
+        $('span.compnum').html(this_comp_num);
+        $('span.compdeadline').html(this_comp_deadline_date.toUTCString());
+
+        // fill scrambles
+
         $('.scramble_to_fill').each(function () {
-          console.log((i = i + 1));
           $(this).html(scramblers[$(this).attr('data-cube-size')].getRandomScramble().scramble_string);
+        });
+
+        // handle the form submit
+
+        $('.main-form').on('submit', function (e) {
+          console.log('Form submitted.');
+          $('.main-form input').each(function () {
+            console.log('span.' + $(this).attr('name'));
+            if ($(this).attr('name')) {
+              $('span.' + $(this).attr('name')).html($(this).val());
+            }
+          });
+          e.preventDefault();
+          // $('.main-form').hide();
+        });
+
+        // hide the form when the hide form button is pressed
+
+        $('input.hide-form').on('click', function () {
+          $('.main-form-container').hide();
         });
       });
     </script>

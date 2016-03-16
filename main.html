@@ -254,27 +254,27 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 
 **2GEN:**(in this mode of solving, you can only do &lt;R,U&gt;, which has the moves R, R', R2, U, U', U2)
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="RU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="RU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="RU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="RU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="RU"></span>
 
 **LSE:**(in this mode of solving, you can only do &lt;M,U&gt;, which has the moves M, M', M2, U, U', U2)
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="MU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="MU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="MU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="MU"></span>
 
-> 1.
+> 1. <span class="scramble_to_fill_megascramble" data-moves-allowed="MU"></span>
 
 **OLL:** This week, we're doing [OLL <span class="compoll">todo_oll_num</span>] (http://algdb.net/Set/OLL/OLL%20<span class="compoll">todo_oll_number</span>)!
 
@@ -363,11 +363,12 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
 				// Fill all the scrambles that are served from the megascramble function
 				// inside custom_scramblers/megascramble.js 
 
-				var RU_scrambles = megascramble(RU_turns, cubesuff, 5, 25);
-				var MU_scrambles = megascramble(MU_turns, cubesuff, 5, 25);
+				$('.scramble_to_fill_megascramble[data-moves-allowed=RU]').each(function () {
+					$(this).html(megascramble(RU_turns, cubesuff, 1, 25)[0]);
+				});
 
-				$('.megascramble_to_fill').each(function () {
-					console.log("entered!");
+				$('.scramble_to_fill_megascramble[data-moves-allowed=MU]').each(function () {
+					$(this).html(megascramble(MU_turns, cubesuff, 5, 25)[0]);
 				});
 
         // handle the form submit

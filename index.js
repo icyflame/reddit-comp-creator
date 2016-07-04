@@ -4,6 +4,8 @@ var express = require("express");
 
 var app = express();
 
+app.use(express.static(__dirname));
+
 app.route("*").all(function (req, res) {
 	res.send(require('fs').readFileSync('main.html').toString());
 });

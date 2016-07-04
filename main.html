@@ -231,7 +231,7 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
     <script src="scramblers/scramble_333.js" charset="utf-8"></script>
     <script src="scramblers/scramble_NNN.js" charset="utf-8"></script>
     <script src="scramblers/scramble_sq1.js" charset="utf-8"></script>
-		<script src="custom_scramblers/megascramble.js" charset="utf-8"></script>
+		<script src="custom-scramblers/megascramble.js" charset="utf-8"></script>
 
     <script>
       var this_comp_num, this_oll_num, this_comp_deadline, this_comp_deadline_date;
@@ -305,7 +305,7 @@ Anyway, good luck to all those competing, especially those with upcoming WCA com
         });
 
 				// Fill all the scrambles that are served from the megascramble function
-				// inside custom_scramblers/megascramble.js 
+				// inside custom-scramblers/megascramble.js 
 
 				$('.scramble_to_fill_megascramble[data-moves-allowed=RU]').each(function () {
 					$(this).html(megascramble(RU_turns, cubesuff, 1, 25)[0]);

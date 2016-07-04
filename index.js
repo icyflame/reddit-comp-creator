@@ -6,12 +6,8 @@ var app = express();
 
 app.use(express.static(__dirname));
 
-app.route("*").all(function (req, res) {
+app.route("/").all(function (req, res) {
 	res.send(require('fs').readFileSync('main.html').toString());
-});
-
-app.get("/", function(request, response){ //root dir
-	    response.send("Hello!!");
 });
 
 app.listen(port, function () {
